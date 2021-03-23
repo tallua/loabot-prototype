@@ -10,6 +10,11 @@
   "author": "tallua",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.1"
+    "@typeit/discord": "^4.0.9",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.35"
   }
 }
