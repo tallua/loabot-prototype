@@ -3,7 +3,7 @@ import { MessageCommand, onMessage } from '../bot-event';
 
 @onMessage('!ping')
 export default class PingMessage implements MessageCommand {
-    on(message: Discord.Message){
-        message.channel.send('pong');
-    }
+  on(message: Discord.Message) {
+    message.channel.send('pong');
+  }
 }

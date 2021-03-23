@@ -4,7 +4,7 @@ import './command';
 
 
 export class Bot {
-  readonly client : Discord.Client;
+  readonly client: Discord.Client;
   commands: { [tag: string]: MessageCommand };
 
   constructor() {
@@ -20,13 +20,13 @@ export class Bot {
     })
 
     this.client.on('message', (message) => {
-        const text = message.content;
-        console.log(`message written: ${text}`);
-        const tag = text.split(' ')[0];
+      const text = message.content;
+      console.log(`message written: ${text}`);
+      const tag = text.split(' ')[0];
 
-        if(this.commands[tag] !== undefined) {
-            this.commands[tag].on(message);
-        }
+      if (this.commands[tag] !== undefined) {
+        this.commands[tag].on(message);
+      }
     });
 
     this.commands = createCommands();
