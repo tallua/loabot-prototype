@@ -8,6 +8,7 @@ interface CharacterStat {
   characterName: string;
   serverName: string;
   guildName: string;
+  jobName: string;
   territoryName: string;
 
   expeditionLevel: string;
@@ -32,6 +33,7 @@ function extractCharacterStat(doc: Document): CharacterStat {
   const characterName = doc.querySelector('.profile-character-info__name').getAttribute('title');
   const serverName = doc.querySelector('.profile-character-info__server').getAttribute('title').substr(1);
   const guildName = doc.querySelector('.game-info__guild span:nth-child(2)').textContent;
+  const jobName = doc.querySelector('.profile-equipment__character img').getAttribute('alt');
   const territoryName = doc.querySelector('.game-info__wisdom span:nth-child(3)').textContent;
 
   const expeditionLevel = doc.querySelector('.level-info__expedition span:nth-child(2) small').nextSibling.textContent;
@@ -56,6 +58,7 @@ function extractCharacterStat(doc: Document): CharacterStat {
     characterName,
     serverName,
     guildName,
+    jobName,
     territoryName,
     expeditionLevel,
     characterLevel,
@@ -89,8 +92,8 @@ export default class characterCommand implements MessageCommand {
 
         var text = '';
         text += '```\n';
-        text += `이름: ${stat.characterName}    서버: ${stat.serverName}\n`;
-        text += `길드: ${stat.guildName}    영지: ${stat.territoryName}\n`;
+        text += `이름: ${stat.characterName}    직업: ${stat.jobName}\n`;
+        text += `길드: ${stat.guildName}    서버: ${stat.serverName}\n`;
         text += `----------------------------------------\n`;
         text += `레벨\n`;
         text += `캐릭터: ${stat.characterLevel}    아이템: ${stat.itemLevel}\n`;
