@@ -90,7 +90,7 @@ export default class characterCommand implements MessageCommand {
         const dom = new JSDOM(data);
         const stat = extractCharacterStat(dom.window.document);
 
-        var text = '';
+        let text = '';
         text += '```\n';
         text += `이름: ${stat.characterName}    직업: ${stat.jobName}\n`;
         text += `길드: ${stat.guildName}    서버: ${stat.serverName}\n`;
