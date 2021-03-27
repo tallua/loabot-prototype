@@ -8,7 +8,7 @@ const commandList = Object.entries(createCommands()).map(([tag, executer]) => { 
 
 @onMessage('!help')
 @onMessage('!명령어')
-export class helpCommand implements MessageCommand {
+export class HelpCommand implements MessageCommand {
   on(message: Discord.Message) {
 
     let text = '';

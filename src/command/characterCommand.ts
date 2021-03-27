@@ -77,7 +77,7 @@ function extractCharacterStat(doc: Document): CharacterStat {
 }
 @onMessage('!character')
 @onMessage('!캐릭터')
-export default class characterCommand implements MessageCommand {
+export default class CharacterCommand implements MessageCommand {
   async on(message: Discord.Message) {
     const params = message.content.split(' ');
     if (params.length < 2) {

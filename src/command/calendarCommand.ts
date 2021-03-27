@@ -24,7 +24,7 @@ function extractBossEventList(doc: Document): BossEvent[] {
 
 @onMessage('!timer')
 @onMessage('!시간표')
-export default class calendarCommand implements MessageCommand {
+export default class CalendarCommand implements MessageCommand {
   async on(message: Discord.Message) {
     await GrabInvenTimerPage()
       .then((data) => {
