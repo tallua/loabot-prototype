@@ -36,10 +36,10 @@ function extractCharacterStat(doc: Document): CharacterStat {
   const jobName = doc.querySelector('.profile-equipment__character img').getAttribute('alt');
   const territoryName = doc.querySelector('.game-info__wisdom span:nth-child(3)').textContent;
 
-  const expeditionLevel = doc.querySelector('.level-info__expedition span:nth-child(2) small').nextSibling.textContent;
-  const characterLevel = doc.querySelector('.level-info__item span:nth-child(2) small').nextSibling.textContent;
-  const itemLevel = doc.querySelector('.level-info2__expedition span:nth-child(2) small').nextSibling.textContent;
-  const territoryLevel = doc.querySelector('.game-info__wisdom span:nth-child(2) small').nextSibling.textContent;
+  const expeditionLevel = doc.querySelector('.level-info__expedition span:nth-child(2) small')?.nextSibling.textContent;
+  const characterLevel = doc.querySelector('.level-info__item span:nth-child(2) small')?.nextSibling.textContent;
+  const itemLevel = doc.querySelector('.level-info2__expedition span:nth-child(2) small')?.nextSibling.textContent;
+  const territoryLevel = doc.querySelector('.game-info__wisdom span:nth-child(2) small')?.nextSibling.textContent;
 
   const attackPoint = doc.querySelector('.profile-ability-basic ul li:nth-child(1) span:nth-child(2)').textContent;
   const healthPoint = doc.querySelector('.profile-ability-basic ul li:nth-child(2) span:nth-child(2)').textContent;
@@ -55,23 +55,23 @@ function extractCharacterStat(doc: Document): CharacterStat {
   doc.querySelectorAll('.profile-ability-engrave div div.swiper-wrapper li').forEach((value) => { imprints.push(value.querySelector('span').textContent); })
 
   return {
-    characterName,
-    serverName,
-    guildName,
-    jobName,
-    territoryName,
-    expeditionLevel,
-    characterLevel,
-    itemLevel,
-    territoryLevel,
-    attackPoint,
-    healthPoint,
-    fatalityPoint,
-    masteryPoint,
-    overpoweringPoint,
-    quicknessPoint,
-    patiencePoint,
-    skillfulPoint,
+    characterName: characterName ? characterName : '-',
+    serverName: serverName ? serverName : '-',
+    guildName: guildName ? guildName : '-',
+    jobName: jobName ? jobName : '-',
+    territoryName: territoryName ? territoryName : '-',
+    expeditionLevel: expeditionLevel ? expeditionLevel : '-',
+    characterLevel: characterLevel ? characterLevel : '-',
+    itemLevel: itemLevel ? itemLevel : '-',
+    territoryLevel: territoryLevel ? territoryLevel : '-',
+    attackPoint: attackPoint ? attackPoint : '-',
+    healthPoint: healthPoint ? healthPoint : '-',
+    fatalityPoint: fatalityPoint ? fatalityPoint : '-',
+    masteryPoint: masteryPoint ? masteryPoint : '-',
+    overpoweringPoint: overpoweringPoint ? overpoweringPoint : '-',
+    quicknessPoint: quicknessPoint ? quicknessPoint : '-',
+    patiencePoint: patiencePoint ? patiencePoint : '-',
+    skillfulPoint: skillfulPoint ? skillfulPoint : '-',
     imprints
   };
 }
