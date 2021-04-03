@@ -3,6 +3,7 @@ import { MessageCommand, onMessage } from '../bot-event';
 import { GrabLostarkCharacterPage } from '../web_utils';
 
 import { JSDOM } from 'jsdom';
+import EasyTable = require('easy-table');
 
 interface CharacterStat {
   characterName: string;
@@ -90,24 +91,69 @@ export default class CharacterCommand implements MessageCommand {
         const dom = new JSDOM(data);
         const stat = extractCharacterStat(dom.window.document);
 
+        const nameTable = new EasyTable;
+        nameTable.cell('이름', stat.characterName);
+        nameTable.cell('서버', stat.serverName);
+        nameTable.cell('직업', stat.jobName);
+        nameTable.cell('길드', stat.guildName);
+        nameTable.newRow();
+
+        const levelTable = new EasyTable;
+        levelTable.cell('캐릭터', stat.characterLevel);
+        levelTable.cell('아이템', stat.itemLevel);
+        levelTable.cell('원정대', stat.expeditionLevel);
+        levelTable.cell('영지', stat.territoryLevel);
+        levelTable.newRow();
+
+        const powerTable = new EasyTable;
+        powerTable.cell('특성 1', '치명');
+        powerTable.cell('수치 1', stat.fatalityPoint);
+        powerTable.cell('특성 2', '특화');
+        powerTable.cell('수치 2', stat.masteryPoint);
+        powerTable.cell('특성 3', '신속');
+        powerTable.cell('수치 3', stat.quicknessPoint);
+        powerTable.newRow();
+        powerTable.cell('특성 1', '제압');
+        powerTable.cell('수치 1', stat.overpoweringPoint);
+        powerTable.cell('특성 2', '숙련');
+        powerTable.cell('수치 2', stat.skillfulPoint);
+        powerTable.cell('특성 3', '인내');
+        powerTable.cell('수치 3', stat.patiencePoint);
+        powerTable.newRow();
+
         let text = '';
-        text += '```\n';
-        text += `이름: ${stat.characterName}    직업: ${stat.jobName}\n`;
-        text += `길드: ${stat.guildName}    서버: ${stat.serverName}\n`;
-        text += `----------------------------------------\n`;
-        text += `레벨\n`;
-        text += `캐릭터: ${stat.characterLevel}    아이템: ${stat.itemLevel}\n`;
-        text += `원정대: ${stat.expeditionLevel}    영지: ${stat.territoryLevel}\n`;
-        text += `----------------------------------------\n`;
-        text += `특성\n`;
-        text += `공격력: ${stat.attackPoint}    체력: ${stat.healthPoint}\n`;
-        text += `치명: ${stat.fatalityPoint}    특화: ${stat.masteryPoint}\n`;
-        text += `제압: ${stat.overpoweringPoint}    신속: ${stat.quicknessPoint}\n`;
-        text += `인내: ${stat.patiencePoint}    숙련: ${stat.skillfulPoint}\n`;
-        text += `----------------------------------------\n`;
-        text += `각인\n`;
+        text += '```md\n';
+        text += '#캐릭터\n';
+        text += nameTable.toString();
+        text += `\n`;
+        text += `#레벨\n`;
+        text += levelTable.toString();
+        text += `\n`;
+        text += `#특성\n`;
+        text += powerTable.toString();
+        text += `\n`;
+        text += `#각인\n`;
         text += `${stat.imprints.join('\n')}`;
         text += '```';
+
+        //let text = '';
+        //text += '```\n';
+        //text += `이름: ${stat.characterName}    직업: ${stat.jobName}\n`;
+        //text += `길드: ${stat.guildName}    서버: ${stat.serverName}\n`;
+        //text += `----------------------------------------\n`;
+        //text += `레벨\n`;
+        //text += `캐릭터: ${stat.characterLevel}    아이템: ${stat.itemLevel}\n`;
+        //text += `원정대: ${stat.expeditionLevel}    영지: ${stat.territoryLevel}\n`;
+        //text += `----------------------------------------\n`;
+        //text += `특성\n`;
+        //text += `공격력: ${stat.attackPoint}    체력: ${stat.healthPoint}\n`;
+        //text += `치명: ${stat.fatalityPoint}    특화: ${stat.masteryPoint}\n`;
+        //text += `제압: ${stat.overpoweringPoint}    신속: ${stat.quicknessPoint}\n`;
+        //text += `인내: ${stat.patiencePoint}    숙련: ${stat.skillfulPoint}\n`;
+        //text += `----------------------------------------\n`;
+        //text += `각인\n`;
+        //text += `${stat.imprints.join('\n')}`;
+        //text += '```';
 
         message.channel.send(text);
       }).catch((e) => {

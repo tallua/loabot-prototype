@@ -2,6 +2,7 @@ import * as Discord from 'discord.js';
 import { JSDOM } from 'jsdom';
 import { MessageCommand, onMessage } from '../bot-event';
 import { GrabInvenTimerPage } from '../web_utils';
+import EasyTable = require('easy-table');
 
 
 interface BossEvent {
@@ -37,14 +38,22 @@ export default class CalendarCommand implements MessageCommand {
           eventsByTime[e.start].push(e);
         });
 
-        eventsByTime
+        const table = new EasyTable;
+        Object.entries(eventsByTime)
+          .slice(0, 10)
+          .forEach(([time, eventList]) => {
+            table.cell('시간', time)
+            table.cell('활동', `${eventList.map((e) => `${e.name}`).join(', ')}`)
+            table.newRow();
+          });
+
+        console.log(table.toString());
 
         let text = '';
 
-        text += '```';
-        text += Object.entries(eventsByTime)
-          .map(([time, eventList]) => { return `${time}: ${eventList.map((e) => `${e.name}`).join(', ')}` })
-          .join('\n');
+        text += '```md\n';
+        text += '#시간표\n';
+        text += table.toString();
         text += '```';
 
         message.channel.send(text);

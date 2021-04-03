@@ -2,9 +2,19 @@ import * as Discord from 'discord.js';
 import { JSDOM } from 'jsdom';
 import { MessageCommand, onMessage } from '../bot-event';
 import { GrabLostarkMarketPage } from '../web_utils';
+import EasyTable = require('easy-table');
 
+const gradeMap = {
+  '0': '일반',
+  '1': '고급',
+  '2': '희귀',
+  '3': '영웅',
+  '4': '전설',
+  '5': '유물',
+}
 interface ItemStat {
   name: string;
+  grade: string;
   averagePrice: string;
   recentPrice: string;
   lowestPrice: string;
@@ -16,6 +26,7 @@ function extractItems(doc: Document) : ItemStat[] {
   return itemListDom.map((elem) => {
     return {
       name: elem.querySelector('td:nth-child(1) div span.name').textContent,
+      grade: elem.querySelector('.grade').getAttribute('data-grade'),
       averagePrice: elem.querySelector('td:nth-child(2) .price em').textContent,
       recentPrice: elem.querySelector('td:nth-child(3) .price em').textContent,
       lowestPrice: elem.querySelector('td:nth-child(4) .price em').textContent
@@ -37,16 +48,25 @@ export class MarketCommand implements MessageCommand {
     await GrabLostarkMarketPage({
       name: itemName
     }).then((data) => {
-      console.log(`<html><head/><body>${data}</body></html>`);
       const dom = new JSDOM(data);
 
       const items = extractItems(dom.window.document);
+      const easytable = new EasyTable;
+
+      easytable.separator = '\t';
+      items.forEach((item) => {
+        easytable.cell('이름', item.name);
+        easytable.cell('등급', gradeMap[item.grade]);
+        easytable.cell('평균가', item.averagePrice);
+        easytable.cell('최저가', item.lowestPrice);
+        easytable.cell('최근가', item.recentPrice);
+        easytable.newRow();
+      });
 
       let text = '';
-      text += '```';
-      text += `거래소 검색 결과: ${itemName}\n`;
-      text += `이름 | 평균가 | 최저가 | 최근가\n`;
-      text += items.map((val) => { return `${val.name} | ${val.averagePrice} | ${val.lowestPrice} | ${val.recentPrice}`}).join('\n');
+      text += '```md\n';
+      text += `#거래소 검색 결과: ${itemName}\n`;
+      text += `${easytable.toString()}`;
       text += '```';
 
       message.channel.send(text);
