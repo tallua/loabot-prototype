@@ -136,25 +136,6 @@ export default class CharacterCommand implements MessageCommand {
         text += `${stat.imprints.join('\n')}`;
         text += '```';
 
-        //let text = '';
-        //text += '```\n';
-        //text += `이름: ${stat.characterName}    직업: ${stat.jobName}\n`;
-        //text += `길드: ${stat.guildName}    서버: ${stat.serverName}\n`;
-        //text += `----------------------------------------\n`;
-        //text += `레벨\n`;
-        //text += `캐릭터: ${stat.characterLevel}    아이템: ${stat.itemLevel}\n`;
-        //text += `원정대: ${stat.expeditionLevel}    영지: ${stat.territoryLevel}\n`;
-        //text += `----------------------------------------\n`;
-        //text += `특성\n`;
-        //text += `공격력: ${stat.attackPoint}    체력: ${stat.healthPoint}\n`;
-        //text += `치명: ${stat.fatalityPoint}    특화: ${stat.masteryPoint}\n`;
-        //text += `제압: ${stat.overpoweringPoint}    신속: ${stat.quicknessPoint}\n`;
-        //text += `인내: ${stat.patiencePoint}    숙련: ${stat.skillfulPoint}\n`;
-        //text += `----------------------------------------\n`;
-        //text += `각인\n`;
-        //text += `${stat.imprints.join('\n')}`;
-        //text += '```';
-
         message.channel.send(text);
       }).catch((e) => {
         message.channel.send(`failed to get data of ${params[1]}`);
