@@ -1,11 +1,13 @@
 import * as https from 'https';
 import * as http from 'http';
 
-export async function GrabLostarkCharacterPage(character_name: string): Promise<string> {
+function grabLostarkSite(path: string): Promise<string> {
   const result = new Promise<string>((resolve, reject) => {
+    const host = `lostark.game.onstove.com`;
+
     const req = https.request({
-      host: `lostark.game.onstove.com`,
-      path: encodeURI(`/Profile/Character/${character_name}`)
+      host: encodeURI(host),
+      path: encodeURI(path)
     }, (res) => {
       var data = '';
 
@@ -14,13 +16,13 @@ export async function GrabLostarkCharacterPage(character_name: string): Promise<
       });
 
       res.on('end', function () {
-        console.log(`success for character : ${character_name}`);
+        console.log(`success grab page : ${host}${path}`);
         resolve(data);
       });
     });
 
     req.on('error', (e) => {
-      console.log(`failed requesting for character : ${character_name}`);
+      console.log(`failed grab for page: ${host}${path}`);
       reject(e);
     })
     req.end();
@@ -29,6 +31,22 @@ export async function GrabLostarkCharacterPage(character_name: string): Promise<
   return result;
 }
 
+export async function GrabLostarkCharacterPage(character_name: string): Promise<string> {
+  const result = grabLostarkSite(`/Profile/Character/${character_name}`);
+
+  return result;
+}
+export interface MarketQueryParams {
+  name: string;
+}
+
+export async function GrabLostarkMarketPage(param: MarketQueryParams) {
+  const result = grabLostarkSite(`/Market/GetMarketItemList?` +
+    `firstCategory=0&secondCategory=0&characterClass=&tier=0&grade=99&itemName=${param.name}` +
+    `&pageSize=10&pageNo=1&isInit=false&sortType=7&_=1616846779410`);
+
+  return result;
+}
 
 export async function GrabInvenTimerPage(): Promise<string> {
   const result = new Promise<string>((resolve, reject) => {
@@ -57,3 +75,4 @@ export async function GrabInvenTimerPage(): Promise<string> {
 
   return result;
 }
+
