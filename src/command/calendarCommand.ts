@@ -3,6 +3,7 @@ import { JSDOM } from 'jsdom';
 import { MessageCommand, onMessage } from '../bot-event';
 import { GrabInvenTimerPage } from '../web_utils';
 import EasyTable = require('easy-table');
+import dateformat = require('dateformat');
 
 
 interface BossEvent {
@@ -42,7 +43,7 @@ export default class CalendarCommand implements MessageCommand {
         Object.entries(eventsByTime)
           .slice(0, 10)
           .forEach(([time, eventList]) => {
-            table.cell('시간', time)
+            table.cell('시간', dateformat(Date.parse(time), 'HH:MM'))
             table.cell('활동', `${eventList.map((e) => `${e.name}`).join(', ')}`)
             table.newRow();
           });
@@ -52,7 +53,7 @@ export default class CalendarCommand implements MessageCommand {
         let text = '';
 
         text += '```md\n';
-        text += '#시간표\n';
+        text += `#시간표: ${dateformat(Date.now(), 'mm/dd - HH:MM')}\n`;
         text += table.toString();
         text += '```';
 
