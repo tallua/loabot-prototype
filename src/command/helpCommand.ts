@@ -2,7 +2,7 @@ import * as Discord from 'discord.js';
 import { MessageCommand, onMessage, createCommands } from '../bot-event';
 
 
-const commandList = Object.entries(createCommands()).map(([tag, executer]) => { return tag; });
+
 
 
 
@@ -10,6 +10,7 @@ const commandList = Object.entries(createCommands()).map(([tag, executer]) => { 
 @onMessage('!명령어')
 export class HelpCommand implements MessageCommand {
   on(message: Discord.Message) {
+    const commandList = Object.entries(createCommands()).map(([tag, executer]) => { return tag; });
 
     let text = '';
     text += '```';
