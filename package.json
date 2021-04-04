@@ -5,15 +5,18 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
+    "debug": "tsc && node dist/test/debug.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "tallua",
   "license": "ISC",
   "dependencies": {
     "@typeit/discord": "^4.0.9",
+    "@types/cheerio": "^0.22.28",
     "@types/dateformat": "^3.0.1",
     "@types/easy-table": "0.0.32",
     "@types/jsdom": "^16.2.7",
+    "cheerio": "^1.0.0-rc.5",
     "dateformat": "^4.5.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
