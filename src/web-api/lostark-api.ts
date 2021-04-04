@@ -8,7 +8,8 @@ function getLostarkSite(path: string): Promise<string> {
 
     const req = https.request({
       host: encodeURI(host),
-      path: encodeURI(path)
+      path: encodeURI(path),
+      timeout: 3000
     }, (res) => {
       var data = '';
 
@@ -41,7 +42,8 @@ function postLostarkSite(path: string, headers: OutgoingHttpHeaders, data: strin
       host: encodeURI(host),
       path: encodeURI(path),
       method: 'POST',
-      headers: headers
+      headers: headers,
+      timeout: 3000
     }, (res) => {
       var data = '';
 
@@ -117,7 +119,7 @@ interface CollectionInfo {
     adventureStory: GeneralCollectionData[],
     markOfIgnea: GeneralCollectionData[],
     leafOfWorldTree: GeneralCollectionData[],
-    mococo: MococoCollectionData[]
+    mococoSeed: MococoCollectionData[]
   }
 
 }
@@ -228,7 +230,7 @@ function parseCollectionInfo(data: string): CollectionInfo {
       adventureStory: parseGeneral('#lui-tab1-6 .list li'),
       markOfIgnea: parseGeneral('#lui-tab1-7 .list li'),
       leafOfWorldTree: parseGeneral('#lui-tab1-8 .list li'),
-      mococo: parseMococo('#lui-tab1-5 .list li')
+      mococoSeed: parseMococo('#lui-tab1-5 .list li')
     }
   };
 }
