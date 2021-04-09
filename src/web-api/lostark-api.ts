@@ -282,3 +282,43 @@ export function GetCharacterInfo(character_name: string): Promise<CharacterInfo>
 
   return result;
 }
+
+interface MarketItemInfo {
+  name: string;
+  grade: string;
+  averagePrice: string;
+  recentPrice: string;
+  lowestPrice: string;
+}
+
+export interface MarketInfo {
+  items: MarketItemInfo[]
+}
+
+function parseMarketInfo(data: string): MarketInfo {
+  const selector = cheerio.load(data);
+
+  const items = selector('#tbodyItemList tr').toArray().map((val) => {
+    return {
+      name: selector('td:nth-child(1) div span.name', val).text(),
+      grade: selector('.grade', val).attr('data-grade'),
+      averagePrice: selector('td:nth-child(2) .price em', val).text(),
+      recentPrice: selector('td:nth-child(3) .price em', val).text(),
+      lowestPrice: selector('td:nth-child(4) .price em', val).text()
+    }
+  })
+
+  return {
+    items: items
+  }
+}
+
+
+export function GetMarketInfo(params: { name: string }): Promise<MarketInfo> {
+  const result = getLostarkSite(`/Market/GetMarketItemList?` +
+    `firstCategory=0&secondCategory=0&characterClass=&tier=0&grade=99&itemName=${params.name}` +
+    `&pageSize=10&pageNo=1&isInit=false&sortType=7&_=161684677941`)
+    .then(data => parseMarketInfo(data))
+
+  return result;
+}
