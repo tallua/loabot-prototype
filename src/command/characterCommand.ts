@@ -9,7 +9,7 @@ export default class CharacterCommand implements MessageCommand {
   async on(message: Discord.Message) {
     const params = message.content.split(' ');
     if (params.length < 2) {
-      message.channel.send(`no character name provided`);
+      message.channel.send(`!캐릭터 (캐릭터 이름) 형식으로 말씀해주시겠어요?`);
       return;
     }
 

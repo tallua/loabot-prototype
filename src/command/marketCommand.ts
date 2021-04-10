@@ -18,7 +18,7 @@ export class MarketCommand implements MessageCommand {
   async on(message: Discord.Message) {
     const params = message.content.split(' ');
     if (params.length < 2) {
-      message.channel.send(`no item name provided`);
+      message.channel.send(`!거래소 (아이템 이름) 형식으로 말씀해주시겠어요?`);
       return;
     }
 

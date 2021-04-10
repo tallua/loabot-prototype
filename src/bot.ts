@@ -15,11 +15,17 @@ export class Bot {
 
   loadCommands() {
     console.log(`using test command`);
+    let botid = '';
     this.client.on('ready', () => {
-      console.info(`Logged in as ${this.client.user.tag}!`);
+      botid = this.client.user.id;
+      console.info(`Logged in as ${this.client.user.tag}[${botid}]!`);
     })
 
     this.client.on('message', (message) => {
+      if(message.author.id === botid) {
+        return;
+      }
+
       const text = message.content;
       const tag = text.split(' ')[0];
 

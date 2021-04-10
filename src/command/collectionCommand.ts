@@ -54,11 +54,11 @@ export default class CollectionCommand implements MessageCommand {
   async on(message: Discord.Message) {
     const params = message.content.split(' ');
     if (params.length < 2) {
-      message.channel.send(`no character name provided`);
+      message.channel.send(`!수집품 (캐릭터 이름) [섬마|올페|거심|미술품|모험물|징표|세계수] 형식으로 말씀해주시겠어요?`);
       return;
     }
     else if (params.length < 3) {
-      message.channel.send(`no operation provided`);
+      message.channel.send(`!수집품 [캐릭터 이름] 형식으로 말씀해주시겠어요?`);
       return;
     }
 
