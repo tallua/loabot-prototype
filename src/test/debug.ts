@@ -1,5 +1,5 @@
 import * as webapi from '../web-api';
 
-webapi.GetCalendar().then(data => console.log(data))
+webapi.GetMarketInfo({ name: '냠냠' }).then(data => console.log(data))
 
 

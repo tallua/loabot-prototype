@@ -21,10 +21,10 @@ export class Bot {
 
     this.client.on('message', (message) => {
       const text = message.content;
-      console.log(`message written: ${text}`);
       const tag = text.split(' ')[0];
 
       if (this.commands[tag] !== undefined) {
+        console.log(`command: ${message.author.username}@${message.guild.name}.${message.channel.id} : ${text}`);
         this.commands[tag].on(message);
       }
     });

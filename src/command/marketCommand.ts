@@ -25,7 +25,6 @@ export class MarketCommand implements MessageCommand {
     const itemName = params.slice(1).join(' ');
     await GetMarketInfo({name: itemName})
     .then((info) => {
-      console.log(info);
       if(info.items.length === 0)
         throw `failed parsing item ${itemName}`;
 
