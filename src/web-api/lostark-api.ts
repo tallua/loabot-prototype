@@ -298,6 +298,10 @@ export interface MarketInfo {
 function parseMarketItemInfo(data: string): MarketItemInfo[] {
   const selector = cheerio.load(data);
 
+  if(selector('#tbodyItemList tr').hasClass('empty')) {
+    return [];
+  }
+
   const items = selector('#tbodyItemList tr').toArray().map((val) => {
     return {
       name: selector('td:nth-child(1) div span.name', val).text(),
