@@ -6,7 +6,6 @@ import { MessageCommand, onMessage, createCommands } from '../bot-event';
 
 
 
-@onMessage('!help')
 @onMessage('!명령어')
 export class HelpCommand implements MessageCommand {
   on(message: Discord.Message) {
@@ -14,7 +13,7 @@ export class HelpCommand implements MessageCommand {
 
     let text = '';
     text += '```';
-    text += '사용 가능한 명령어 목록:\n';
+    text += '아래에 명령어 대해서 답해드릴 수 있어요!\n';
     text += `${commandList.join('\n')}`;
     text += '```';
 

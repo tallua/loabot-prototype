@@ -13,7 +13,6 @@ const gradeMap = {
   '5': '유물',
 }
 
-@onMessage('!market')
 @onMessage('!거래소')
 export class MarketCommand implements MessageCommand {
   async on(message: Discord.Message) {
@@ -26,6 +25,10 @@ export class MarketCommand implements MessageCommand {
     const itemName = params.slice(1).join(' ');
     await GetMarketInfo({name: itemName})
     .then((info) => {
+      console.log(info);
+      if(info.items.length === 0)
+        throw `failed parsing item ${itemName}`;
+
       const easytable = new EasyTable;
 
       easytable.separator = '\t';
@@ -46,7 +49,7 @@ export class MarketCommand implements MessageCommand {
 
       message.channel.send(text);
     }).catch((e) => {
-      message.channel.send(`failed to get market data of ${itemName}`);
+      message.channel.send(`'${itemName}'는 어떤 물건인가요?`);
       console.log(e);
     })
   }

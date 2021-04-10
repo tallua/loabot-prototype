@@ -6,7 +6,6 @@ import { GetCalendar } from '../web-api';
 import { MessageCommand, onMessage } from '../bot-event';
 
 
-@onMessage('!timer')
 @onMessage('!시간표')
 export default class CalendarCommand implements MessageCommand {
   async on(message: Discord.Message) {
@@ -39,7 +38,7 @@ export default class CalendarCommand implements MessageCommand {
       message.channel.send(text);
     })
       .catch((e) => {
-        message.channel.send(`failed to get calendar data`);
+        message.channel.send(`어라? 여기다가 시간표를 둔 것 같은데...`);
       })
   }
 }

@@ -48,7 +48,7 @@ function printMococo(collection: MococoCollectionData[]): string {
   return '';
 }
 
-@onMessage('!collection')
+
 @onMessage('!수집품')
 export default class CollectionCommand implements MessageCommand {
   async on(message: Discord.Message) {
@@ -122,7 +122,7 @@ export default class CollectionCommand implements MessageCommand {
 
         message.channel.send(text);
       }).catch((e) => {
-        message.channel.send(`failed to get data of ${params[1]}`);
+        message.channel.send(`'${params[1]}'요? 처음 듣는 이름이에요.`);
         console.log(e);
       })
   }

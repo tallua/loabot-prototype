@@ -4,7 +4,6 @@ import EasyTable = require('easy-table');
 import { MessageCommand, onMessage } from '../bot-event';
 import { GetCharacterInfo } from '../web-api';
 
-@onMessage('!character')
 @onMessage('!캐릭터')
 export default class CharacterCommand implements MessageCommand {
   async on(message: Discord.Message) {
@@ -37,7 +36,8 @@ export default class CharacterCommand implements MessageCommand {
 
         let text = '';
         text += '```md\n';
-        text += `#캐릭터: ${info.names.character} @${info.names.server} ::${info.names.guild} (${info.names.job})\n`;
+        text += `#캐릭터: ${info.names.character}[${info.names.job}] @${info.names.server} `;
+        text += `${info.names.guild === '-' ? '' : '::' + info.names.guild}\n`;
         text += `\n`;
         text += `* 레벨\n`;
         text += ` ${levelTable.toString().replace(/\n/g, '\n ')}`;
@@ -51,7 +51,7 @@ export default class CharacterCommand implements MessageCommand {
 
         message.channel.send(text);
       }).catch((e) => {
-        message.channel.send(`failed to get data of ${params[1]}`);
+        message.channel.send(`'${params[1]}'요? 처음 듣는 이름이에요.`);
         console.log(e);
       })
   }
