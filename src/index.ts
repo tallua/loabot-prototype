@@ -8,7 +8,7 @@ try {
 
   bot.loadCommands();
 
-  bot.start(process.env.TOKEN);
+  bot.start(process.env.PORT);
 } catch (e) {
   console.log(`exception occurred : ${e}`);
 }

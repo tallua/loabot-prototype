@@ -1,7 +1,7 @@
-import * as Discord from 'discord.js';
+import { Request, Response } from 'express';
 import EasyTable = require('easy-table');
 
-import { MessageCommand, onMessage } from '../bot-event';
+import { AsyncMessageCommand, onMessage } from '../bot-event';
 import { GetCharacterInfo } from '../web-api';
 
 interface GeneralCollectionData {
@@ -31,10 +31,9 @@ function printLeaf(collection: GeneralCollectionData[]): string {
   table.separator = '|';
 
   const title = ['고고학', '채집', '벌목', '채광', '수렵', '낚시']
-  for(let i = 1; i < collection.length; ++i)
-  {
+  for (let i = 1; i < collection.length; ++i) {
     table.cell(title[i % 6], collection[i].complete ? 'O' : 'X');
-    if(i % 6 == 0)
+    if (i % 6 == 0)
       table.newRow();
   }
 
@@ -49,21 +48,16 @@ function printMococo(collection: MococoCollectionData[]): string {
 }
 
 
-@onMessage('!수집품')
-export default class CollectionCommand implements MessageCommand {
-  async on(message: Discord.Message) {
-    const params = message.content.split(' ');
-    if (params.length < 2) {
-      message.channel.send(`!수집품 (캐릭터 이름) [섬마|올페|거심|미술품|모험물|징표|세계수] 형식으로 말씀해주시겠어요?`);
-      return;
-    }
-    else if (params.length < 3) {
-      message.channel.send(`!수집품 (캐릭터 이름) [섬마|올페|거심|미술품|모험물|징표|세계수] 형식으로 말씀해주시겠어요?`);
-      return;
+@onMessage('collection')
+export default class CollectionCommand extends AsyncMessageCommand {
+  async onRequest(req: Request): Promise<string> {
+    const options = req.body.data.options as any [];
+    if (options.length < 3) {
+      return Promise.resolve(`!수집품 (캐릭터 이름) [섬마|올페|거심|미술품|모험물|징표|세계수] 형식으로 말씀해주시겠어요?`);
     }
 
-    const characterName = params[1];
-    const op = params.slice(2).join(' ');
+    const characterName = options[0].name;
+    const op = options[1].name;
     await GetCharacterInfo(characterName)
       .then((info) => {
 
@@ -120,10 +114,10 @@ export default class CollectionCommand implements MessageCommand {
         }
         text += '```';
 
-        message.channel.send(text);
+        return text;
       }).catch((e) => {
-        message.channel.send(`'${params[1]}'요? 처음 듣는 이름이에요.`);
         console.log(e);
+        return `'${characterName}'요? 처음 듣는 이름이에요.`;
       })
   }
 }

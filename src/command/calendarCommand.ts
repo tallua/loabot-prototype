@@ -1,15 +1,15 @@
-import * as Discord from 'discord.js';
+import { Request, Response } from 'express';
 import EasyTable = require('easy-table');
 import dateformat = require('dateformat');
 
 import { GetCalendar } from '../web-api';
-import { MessageCommand, onMessage } from '../bot-event';
+import { AsyncMessageCommand, onMessage } from '../bot-event';
 
 
-@onMessage('!시간표')
-export default class CalendarCommand implements MessageCommand {
-  async on(message: Discord.Message) {
-    await GetCalendar().then((calendar) => {
+@onMessage('timer')
+export default class CalendarCommand extends AsyncMessageCommand {
+  async onRequest(): Promise<string> {
+    return GetCalendar().then((calendar) => {
       const eventsByTime: { [time: string]: string[] } = {};
       calendar.events.forEach((e) => {
         if (eventsByTime[e.start] === undefined)
@@ -35,10 +35,10 @@ export default class CalendarCommand implements MessageCommand {
       text += table.toString();
       text += '```';
 
-      message.channel.send(text);
+      return text;
+    }).catch((e) => {
+      console.log(e);
+      return `어라? 여기다가 시간표를 둔 것 같은데...`;
     })
-      .catch((e) => {
-        message.channel.send(`어라? 여기다가 시간표를 둔 것 같은데...`);
-      })
   }
 }

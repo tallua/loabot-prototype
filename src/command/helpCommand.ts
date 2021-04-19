@@ -1,15 +1,10 @@
-import * as Discord from 'discord.js';
-import { MessageCommand, onMessage, createCommands } from '../bot-event';
+import { Request, Response } from 'express';
+import { SyncMessageCommand, onMessage, createCommands } from '../bot-event';
 
-
-
-
-
-
-@onMessage('!명령어')
-export class HelpCommand implements MessageCommand {
-  on(message: Discord.Message) {
-    const commandList = Object.entries(createCommands()).map(([tag, executer]) => { return tag; });
+@onMessage('help')
+export class HelpCommand extends SyncMessageCommand {
+  onRequest(req: Request): string {
+    const commandList = Object.entries(createCommands()).map(([tag,]) => { return tag; });
 
     let text = '';
     text += '```';
@@ -17,7 +12,7 @@ export class HelpCommand implements MessageCommand {
     text += `${commandList.join('\n')}`;
     text += '```';
 
-    message.channel.send(text);
+    return text;
   }
 }
 

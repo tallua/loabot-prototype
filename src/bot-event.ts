@@ -1,8 +1,52 @@
-import * as Discord from 'discord.js';
-import { on } from 'node:events';
+import { Request, Response } from 'express';
+import * as https from 'https';
 
 export interface MessageCommand {
-  on: (message: Discord.Message) => void
+  on(req: Request, res: Response): void;
+}
+export abstract class SyncMessageCommand implements MessageCommand {
+  on(req: Request, res: Response) {
+    res.send({
+      type: 4,
+      tts: false,
+      content: this.onRequest(req),
+      embeds: [],
+      allowed_mentions: {
+        parse: [],
+        roles: [],
+        users: [],
+        replied_user: false
+      },
+      flags: 0
+    });
+  }
+
+  protected abstract onRequest(req: Request): string;
+}
+
+export abstract class AsyncMessageCommand implements MessageCommand {
+  public on(req: Request, res: Response) {
+    res.sendStatus(400);
+    //res.send({
+    //  type: 5,
+    //  tts: false,
+    //  content: 'loading...',
+    //  embeds: [],
+    //  allowed_mentions: {
+    //    parse: [],
+    //    roles: [],
+    //    users: [],
+    //    replied_user: false
+    //  },
+    //  flags: 0
+    //});
+    //
+    //this.onRequest(req).then((content) => {
+    //  // TODO
+    //});
+  }
+
+  protected abstract onRequest(req: Request): Promise<string>;
 }
 
 interface MessageCommandConstructor {

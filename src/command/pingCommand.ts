@@ -1,9 +1,9 @@
-import * as Discord from 'discord.js';
-import { MessageCommand, onMessage } from '../bot-event';
+import { Request, Response } from 'express';
+import { SyncMessageCommand, onMessage } from '../bot-event';
 
-@onMessage('!ping')
-export default class PingMessage implements MessageCommand {
-  on(message: Discord.Message) {
-    message.channel.send('부르셨나요?');
+@onMessage('ping')
+export default class PingMessage extends SyncMessageCommand {
+  onRequest(): string {
+    return '부르셨나요?';
   }
 }

@@ -1,19 +1,20 @@
-import * as Discord from 'discord.js';
+import { Request, Response } from 'express';
 import EasyTable = require('easy-table');
 
-import { MessageCommand, onMessage } from '../bot-event';
+
+import { AsyncMessageCommand, onMessage } from '../bot-event';
 import { GetCharacterInfo } from '../web-api';
 
-@onMessage('!캐릭터')
-export default class CharacterCommand implements MessageCommand {
-  async on(message: Discord.Message) {
-    const params = message.content.split(' ');
-    if (params.length < 2) {
-      message.channel.send(`!캐릭터 (캐릭터 이름) 형식으로 말씀해주시겠어요?`);
-      return;
+@onMessage('character')
+export default class CharacterCommand extends AsyncMessageCommand {
+  async onRequest(req: Request): Promise<string> {
+    const options = req.body.data.options as any [];
+    if (options.length < 2) {
+      return Promise.resolve(`!캐릭터 (캐릭터 이름) 형식으로 말씀해주시겠어요?`);
     }
 
-    await GetCharacterInfo(params[1])
+    const characterName = options[0].name;
+    return GetCharacterInfo(characterName)
       .then((info) => {
 
         const levelTable = new EasyTable;
@@ -49,10 +50,10 @@ export default class CharacterCommand implements MessageCommand {
         text += `${info.imprints.map(v => ` ${v}`).join('\n')}`;
         text += '```';
 
-        message.channel.send(text);
+        return text;
       }).catch((e) => {
-        message.channel.send(`'${params[1]}'요? 처음 듣는 이름이에요.`);
         console.log(e);
+        return `'${characterName}'요? 처음 듣는 이름이에요.`;
       })
   }
 }
