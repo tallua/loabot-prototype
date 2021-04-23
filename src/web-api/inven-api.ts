@@ -8,7 +8,7 @@ function GrabInvenPage(path: string): Promise<string> {
       host: host,
       path: path
     }, (res) => {
-      var data = '';
+      let data = '';
 
       res.on('data', function (chunk) {
         data += chunk;

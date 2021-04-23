@@ -11,7 +11,7 @@ function getLostarkSite(path: string): Promise<string> {
       path: encodeURI(path),
       timeout: 3000
     }, (res) => {
-      var data = '';
+      let data = '';
 
       res.on('data', function (chunk) {
         data += chunk;
@@ -45,7 +45,7 @@ function postLostarkSite(path: string, headers: OutgoingHttpHeaders, data: strin
       headers: headers,
       timeout: 3000
     }, (res) => {
-      var data = '';
+      let data = '';
 
       res.on('data', function (chunk) {
         data += chunk;
