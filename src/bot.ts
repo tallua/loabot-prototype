@@ -29,7 +29,7 @@ export class Bot {
       const text = message.content;
       const tag = text.split(' ')[0];
 
-      if (this.commands[tag] !== undefined) {
+      if (this.commands[tag] !== undefined && message.author && message.guild && message.channel) {
         console.log(`command: ${message.author.username}@${message.guild.name}.${message.channel.id} : ${text}`);
         this.commands[tag].on(message);
       }
