@@ -4,7 +4,7 @@ import { OutgoingHttpHeaders } from 'node:http';
 
 function getLostarkSite(path: string): Promise<string> {
   const result = new Promise<string>((resolve, reject) => {
-    const host = `lostark.game.onstove.com`;
+    const host = `m-lostark.game.onstove.com`;
 
     const req = https.request({
       host: encodeURI(host),
@@ -81,8 +81,7 @@ interface StatusInfo {
     character: string,
     item: string,
     expedition: string,
-    territory: string,
-    pvp: string
+    territory: string
   },
   stats: {
     attack,
@@ -156,33 +155,57 @@ function parseSessionInfo(data: string): SessionInfo {
   }
 }
 
+function format(str, options = { } as { [key: string]: any }) {
+  if(str === undefined || str === null || str.length === 0) {
+    console.log('asdf');
+      return '-';
+  }
+
+  if(options.trim) {
+      str = str.trim();
+  }
+
+  if(options.substr && options.substr != 0) {
+    str = str.substr(options.substr);
+  }
+
+  return str;
+}
+
+function ignore_first(selector) {
+  try {
+      return selector.children().clone().remove().end().text();
+  } catch(e) {
+      return null;
+  }
+}
+
 function parseStatusInfo(data: string): StatusInfo {
   const selector = cheerio.load(data);
 
   return {
     names: {
-      character: selector('.profile-character-info__name').attr('title') || '-',
-      server: selector('.profile-character-info__server').attr('title').substr(1) || '-',
-      guild: selector('.game-info__guild span:nth-child(2)').text() || '-',
-      job: selector('.profile-equipment__character img').attr('alt') || '-',
-      territory: selector('.game-info__wisdom span:nth-child(3)').text() || '-'
+      character: format(ignore_first(selector('#myinfo__character--button2')), { trim: true }),
+      server: format(selector('.myinfo__character .wrapper-define dl:nth-child(1) dd').text(), { substr: 1 }),
+      guild: format(selector('.guild-name').text()),
+      job: format(selector('.myinfo__badge img').attr('alt')),
+      territory: format(selector('.wisdom span').text())
     },
     levels: {
-      character: selector('.level-info__item span:nth-child(2)').children().remove().end().text() || '-',
-      item: selector('.level-info2__expedition span:nth-child(2)').children().remove().end().text().replace(',', '') || '-',
-      expedition: selector('.level-info__expedition span:nth-child(2)').children().remove().end().text() || '-',
-      territory: selector('.game-info__wisdom span:nth-child(2)').children().remove().end().text() || '-',
-      pvp: selector('.pvp-class .field').text() || '-'
+      character: format(selector('#myinfo__character--button2 span').text(), { substr: 3 }),
+      item: format(selector('.myinfo__contents-level .item dd').text()),
+      expedition: format(selector('.myinfo__contents-level div:nth-child(1) dl:nth-child(1) dd').text()),
+      territory: format(selector('.wisdom dd').clone().children().remove().end().text(), { substr: 3 })
     },
     stats: {
-      attack: selector('.profile-ability-basic ul li:nth-child(1) span:nth-child(2)').text() || '0',
-      hp: selector('.profile-ability-basic ul li:nth-child(2) span:nth-child(2)').text() || '0',
-      fatality: selector('.profile-ability-battle ul li:nth-child(1) span:nth-child(2)').text() || '0',
-      mastery: selector('.profile-ability-battle ul li:nth-child(2) span:nth-child(2)').text() || '0',
-      overpower: selector('.profile-ability-battle ul li:nth-child(3) span:nth-child(2)').text() || '0',
-      quickness: selector('.profile-ability-battle ul li:nth-child(4) span:nth-child(2)').text() || '0',
-      patience: selector('.profile-ability-battle ul li:nth-child(5) span:nth-child(2)').text() || '0',
-      skillful: selector('.profile-ability-battle ul li:nth-child(6) span:nth-child(2)').text() || '0'
+      attack: format(selector('.profile-ability-basic:nth-child(1) li:nth-child(1) span:nth-child(2)').text()),
+      hp: format(selector('.profile-ability-basic:nth-child(1) li:nth-child(2) span:nth-child(2)').text()),
+      fatality: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(1) span:nth-child(2)').text()),
+      mastery: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(2) span:nth-child(2)').text()),
+      overpower: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(3) span:nth-child(2)').text()),
+      quickness: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(4) span:nth-child(2)').text()),
+      patience: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(5) span:nth-child(2)').text()),
+      skillful: format(selector('.profile-ability-basic:nth-child(2) li:nth-child(6) span:nth-child(2)').text())
     },
     imprints: selector('.profile-ability-engrave ul li span')
       .toArray()
